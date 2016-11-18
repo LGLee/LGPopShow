@@ -25,7 +25,6 @@
     [testBtn setTitle:@"测试" forState:UIControlStateNormal];
     [self.view addSubview:testBtn];
     testBtn.frame = CGRectMake(10, 100, self.view.frame.size.width - 20, 40);
-    
     [testBtn addTarget:self action:@selector(testBtn:) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -42,8 +41,15 @@
 - (void)testBtn:(UIButton *)sender{
     //我想怎么用
     LGPopView *popView = [[LGPopView alloc] init];
-    LGPopBgView *bgView = [[LGPopBgView alloc] init];
+    popView.frame = CGRectMake(10, 10, 200, 200);
+    UIButton *hahaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [hahaBtn setTitle:@"haha" forState:UIControlStateNormal];
+    hahaBtn.backgroundColor = [UIColor purpleColor];
+    hahaBtn.frame = CGRectMake(10, 10, 30, 10);
+    [popView addSubview:hahaBtn];
     
+    LGPopBgView *bgView = [[LGPopBgView alloc] init];
+    bgView.backgroundColor = [UIColor redColor];
     [self showPopView:popView bgView:bgView inView:nil animation:[LGPopSpring new] dismissed:^{
         
     }];
