@@ -26,7 +26,8 @@ static const void *KpopContentViewKey = &KpopContentViewKey;
 @implementation UIViewController (LGPopViewController)
 
 - (void)showPopView:(UIView *)popView bgView:(UIView *)bgView inView:(UIView *)view animation:(id<LGPopAnimation>)animation dismissed:(void (^)(void))dismissed{
-   //保存传过来的
+    if ([self.popContentView.subviews containsObject:popView]) return;//如果已经弹出,就不要再弹出了
+//保存传过来的
 //    self.popBgView = nil;
 //    self.popBgView = bgView;
     self.popView = nil;
