@@ -25,7 +25,24 @@
 }
 
 - (void)dimissView:(UIView *)popView bgView:(UIView *)bgView completed:(void (^)(void))completed{
+    //_completion = completion;
     
+    [UIView animateWithDuration:0.4 animations:^{
+        bgView.alpha = 0;
+    }];
+    
+    CAKeyframeAnimation *hideAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    hideAnimation.duration = 0.4;
+    hideAnimation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.1f, 1.1f, 1.0f)],
+                             [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0f, 1.0f, 1.0f)],
+                             [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.00f, 0.00f, 0.00f)]];
+    hideAnimation.keyTimes = @[@0.2f, @0.5f, @0.75f];
+    hideAnimation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                      [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                      [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+  //  hideAnimation.delegate = self;
+    [popView.layer addAnimation:hideAnimation forKey:nil];
+
 }
 
 @end

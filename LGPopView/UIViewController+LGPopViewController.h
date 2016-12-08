@@ -18,7 +18,8 @@
 
 
 @interface UIViewController (LGPopViewController)
-
+/** 协议 */
+@property (nonatomic ,retain) id<LGPopAnimation> popAnimation;
 - (void)showPopView:(UIView *)popView bgView:(UIView *)bgView inView:(UIView *)view animation:(id<LGPopAnimation>)animation dismissed:(void(^)(void))dismissed;
 
 - (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation completion:(void(^)(void))completion;

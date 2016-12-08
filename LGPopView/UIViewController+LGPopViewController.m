@@ -17,58 +17,54 @@
 @property (nonatomic, strong) UIView *popView;
 /** 容器 */
 @property (nonatomic, strong) UIView *popContentView;
+/** 消失回调的block */
+@property (nonatomic , copy) void(^popDismissedCallBackBlock)(void);
+
 
 @end
 
 static const void *KPopBgViewKey =&KPopBgViewKey;
 static const void *KPopViewKey = &KPopViewKey;
 static const void *KpopContentViewKey = &KpopContentViewKey;
+static const void *KpopDismissedCallBackBlock = &KpopDismissedCallBackBlock;
+static const void *KpopAnimation = &KpopAnimation;
 @implementation UIViewController (LGPopViewController)
 
 - (void)showPopView:(UIView *)popView bgView:(UIView *)bgView inView:(UIView *)view animation:(id<LGPopAnimation>)animation dismissed:(void (^)(void))dismissed{
     if ([self.popContentView.subviews containsObject:popView]) return;//如果已经弹出,就不要再弹出了
-//保存传过来的
-//    self.popBgView = nil;
-//    self.popBgView = bgView;
-    self.popView = nil;
-    self.popView = bgView;
-
     //判断弹出位置和容器加载
     UIView *sourceView = [self adjustSourceView:view];
     UIView *popContentView = [[UIView alloc] initWithFrame:sourceView.bounds];
-    self.popContentView = nil;
     self.popContentView = popContentView;
     popContentView.backgroundColor = [UIColor clearColor];
     [sourceView addSubview:popContentView];
-    
     if (bgView==nil) {//如果bgView没有--创建一个bgview
-        self.popBgView = [self defaultBgView];
+        bgView = [self defaultBgView];
     }else{
-        self.popBgView = bgView;
-        if (!(bgView.frame.size.height&&bgView.frame.size.width)) {//对bgView的一些判断，如果没有给，那么就等于当前容器的bounds
-            self.popBgView.frame = popContentView.bounds;
-        }
+        if (!(bgView.frame.size.height&&bgView.frame.size.width)) {//对bgView的一些判断，默认等于当前容器的bounds
+            bgView.frame =popContentView.bounds;
+            }
     }
+    self.popBgView = bgView;//保存传过来的bgView
     [popContentView addSubview:self.popBgView];
+    //点击背景的时候要移除
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissedView:)];
     [self.popBgView addGestureRecognizer:tap];
-    [popContentView addSubview:popView];
-    
     if (!(popView.frame.size.height&&popView.frame.size.width)) {//如果没有宽高，给个默认的宽高
         CGRect currRect = popView.frame;
         currRect.size = CGSizeMake(100, 100);
         popView.frame = currRect;
     }
-    
     if (!(popView.frame.origin.x&&popView.frame.origin.y)) {//没有原点,设置默认从中心点开始弹出
         popView.center = popContentView.center;
     }
-    
+    self.popView = popView;
+    [popContentView addSubview:self.popView];
     if (animation) {//加载动画
         [animation showView:popView bgView:bgView];
     }
+    [self setPopDismissedCallBackBlock:dismissed];
 }
-
 
 //默认背景
 - (UIView *)defaultBgView{
@@ -76,23 +72,16 @@ static const void *KpopContentViewKey = &KpopContentViewKey;
     defaultBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
     return defaultBgView;
 }
-//默认弹出框的大小
-- (void)defaultPopView{
-
-}
-
-
-
-
+/**
+ 判断应该将此pop加载在哪
+ @param sourceView 源view
+ @return 判断好的源view
+ */
 - (UIView *)adjustSourceView:(UIView *)sourceView{
-    if (sourceView==nil) {
-        return [UIApplication sharedApplication].keyWindow;
+    if (sourceView) {
+        return sourceView;
     }else{
-        UIViewController *recentView = self;
-        while (recentView.parentViewController != nil) {
-            recentView = recentView.parentViewController;
-        }
-        return recentView.view;
+        return [UIApplication sharedApplication].keyWindow;
     }
 }
 
@@ -102,11 +91,12 @@ static const void *KpopContentViewKey = &KpopContentViewKey;
 
 - (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation completion:(void (^)(void))completion{
     if (animation) {//如果需要消失的动画
-        
-    }else{
-        
+        [animation dimissView:self.popView bgView:self.popBgView completed:^{
+            [self.popContentView removeFromSuperview];
+        }];
+    }else{//如果不需要消失动画
+        [self.popContentView removeFromSuperview];
     }
-    [self.popContentView removeFromSuperview];
 }
 
 #pragma mark - runTime实现分类的setting和getting
@@ -131,6 +121,19 @@ static const void *KpopContentViewKey = &KpopContentViewKey;
     objc_setAssociatedObject(self, KpopContentViewKey, popContentView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)setPopDismissedCallBackBlock:(void (^)(void))popDismissedCallBackBlock{
+    objc_setAssociatedObject(self, KpopDismissedCallBackBlock, popDismissedCallBackBlock, OBJC_ASSOCIATION_COPY);
+}
 
+- (void (^)(void))popDismissedCallBackBlock{
+    return objc_getAssociatedObject(self, KpopDismissedCallBackBlock);
+}
+
+- (void)setPopAnimation:(id<LGPopAnimation>)popAnimation{
+    objc_setAssociatedObject(self, KpopAnimation, popAnimation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (id<LGPopAnimation>)popAnimation{
+    return objc_getAssociatedObject(self, KpopAnimation);
+}
 
 @end
