@@ -20,7 +20,6 @@
 /** 消失回调的block */
 @property (nonatomic , copy) void(^popDismissedCallBackBlock)(void);
 
-
 @end
 
 static const void *KPopBgViewKey =&KPopBgViewKey;
@@ -60,6 +59,7 @@ static const void *KpopAnimation = &KpopAnimation;
     }
     self.popView = popView;
     [popContentView addSubview:self.popView];
+    self.popAnimation = animation;
     if (animation) {//加载动画
         [animation showView:popView bgView:bgView];
     }
@@ -86,12 +86,12 @@ static const void *KpopAnimation = &KpopAnimation;
 }
 
 - (void)dismissedView:(UIGestureRecognizer *)ges{
-    [self dismissPopViewWithAnimation:nil completion:nil];
+    [self dismissPopViewWithAnimation:self.popAnimation  completion:nil];
 }
 
 - (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation completion:(void (^)(void))completion{
     if (animation) {//如果需要消失的动画
-        [animation dimissView:self.popView bgView:self.popBgView completed:^{
+        [animation dimissView:self.popView bgView:self.popContentView completed:^{
             [self.popContentView removeFromSuperview];
         }];
     }else{//如果不需要消失动画

@@ -8,6 +8,12 @@
 
 #import "LGPopSpring.h"
 
+@interface LGPopSpring ()<CAAnimationDelegate>
+/** <#weak属性#> */
+@property (nonatomic ,copy) void(^completed)(void);
+
+@end
+
 @implementation LGPopSpring
 
 - (void)showView:(UIView *)popView bgView:(UIView *)bgView{
@@ -25,11 +31,12 @@
 }
 
 - (void)dimissView:(UIView *)popView bgView:(UIView *)bgView completed:(void (^)(void))completed{
-    //_completion = completion;
+    _completed  = completed;
     
     [UIView animateWithDuration:0.4 animations:^{
         bgView.alpha = 0;
     }];
+    
     
     CAKeyframeAnimation *hideAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
     hideAnimation.duration = 0.4;
@@ -40,9 +47,13 @@
     hideAnimation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-  //  hideAnimation.delegate = self;
+    hideAnimation.delegate = self;
     [popView.layer addAnimation:hideAnimation forKey:nil];
-
 }
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+    _completed();
+}
+
 
 @end
