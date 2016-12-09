@@ -11,6 +11,8 @@
 #import "LGPopView.h"
 #import "UIViewController+LGPopViewController.h"
 #import "LGPopSpring.h"
+#import "LGPopTopDrop.h"
+#import "LGPopDownRise.h"
 @interface ViewController ()
 
 @end
@@ -50,7 +52,7 @@
     
     LGPopBgView *bgView = [[LGPopBgView alloc] init];
     bgView.backgroundColor = [UIColor redColor];
-    [self showPopView:popView bgView:bgView inView:nil animation:[LGPopSpring new] dismissed:^{
+    [self showPopView:popView bgView:bgView inView:nil animation:[LGPopDownRise new] dismissed:^{
         
     }];
 }

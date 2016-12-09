@@ -18,6 +18,8 @@
 		DD1497771DDDA1A700932BE6 /* LGPopBgView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1497761DDDA1A700932BE6 /* LGPopBgView.m */; };
 		DD14977A1DDDA1B400932BE6 /* LGPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD1497791DDDA1B400932BE6 /* LGPopView.m */; };
 		DD14977D1DDDA80D00932BE6 /* UIViewController+LGPopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14977C1DDDA80D00932BE6 /* UIViewController+LGPopViewController.m */; };
+		DDCB7BC91DFA5AC200F064BC /* LGPopTopDrop.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB7BC81DFA5AC200F064BC /* LGPopTopDrop.m */; };
+		DDCB7BCC1DFA5DD800F064BC /* LGPopDownRise.m in Sources */ = {isa = PBXBuildFile; fileRef = DDCB7BCB1DFA5DD800F064BC /* LGPopDownRise.m */; };
 		DDF21D851DDEA0180065E211 /* LGPopSpring.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF21D841DDEA0180065E211 /* LGPopSpring.m */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +63,10 @@
 		DD1497791DDDA1B400932BE6 /* LGPopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGPopView.m; sourceTree = "<group>"; };
 		DD14977B1DDDA80D00932BE6 /* UIViewController+LGPopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LGPopViewController.h"; sourceTree = "<group>"; };
 		DD14977C1DDDA80D00932BE6 /* UIViewController+LGPopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LGPopViewController.m"; sourceTree = "<group>"; };
+		DDCB7BC71DFA5AC200F064BC /* LGPopTopDrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGPopTopDrop.h; sourceTree = "<group>"; };
+		DDCB7BC81DFA5AC200F064BC /* LGPopTopDrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGPopTopDrop.m; sourceTree = "<group>"; };
+		DDCB7BCA1DFA5DD800F064BC /* LGPopDownRise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGPopDownRise.h; sourceTree = "<group>"; };
+		DDCB7BCB1DFA5DD800F064BC /* LGPopDownRise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGPopDownRise.m; sourceTree = "<group>"; };
 		DDF21D831DDEA0180065E211 /* LGPopSpring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGPopSpring.h; sourceTree = "<group>"; };
 		DDF21D841DDEA0180065E211 /* LGPopSpring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGPopSpring.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -123,6 +129,10 @@
 				DD1497791DDDA1B400932BE6 /* LGPopView.m */,
 				DDF21D831DDEA0180065E211 /* LGPopSpring.h */,
 				DDF21D841DDEA0180065E211 /* LGPopSpring.m */,
+				DDCB7BC71DFA5AC200F064BC /* LGPopTopDrop.h */,
+				DDCB7BC81DFA5AC200F064BC /* LGPopTopDrop.m */,
+				DDCB7BCA1DFA5DD800F064BC /* LGPopDownRise.h */,
+				DDCB7BCB1DFA5DD800F064BC /* LGPopDownRise.m */,
 				DD14977B1DDDA80D00932BE6 /* UIViewController+LGPopViewController.h */,
 				DD14977C1DDDA80D00932BE6 /* UIViewController+LGPopViewController.m */,
 				DD14974B1DDDA16500932BE6 /* Main.storyboard */,
@@ -300,7 +310,9 @@
 				DD14974A1DDDA16500932BE6 /* ViewController.m in Sources */,
 				DD1497471DDDA16500932BE6 /* AppDelegate.m in Sources */,
 				DDF21D851DDEA0180065E211 /* LGPopSpring.m in Sources */,
+				DDCB7BC91DFA5AC200F064BC /* LGPopTopDrop.m in Sources */,
 				DD14977D1DDDA80D00932BE6 /* UIViewController+LGPopViewController.m in Sources */,
+				DDCB7BCC1DFA5DD800F064BC /* LGPopDownRise.m in Sources */,
 				DD1497771DDDA1A700932BE6 /* LGPopBgView.m in Sources */,
 				DD1497441DDDA16500932BE6 /* main.m in Sources */,
 				DD14977A1DDDA1B400932BE6 /* LGPopView.m in Sources */,
