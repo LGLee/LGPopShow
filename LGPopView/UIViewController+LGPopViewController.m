@@ -93,9 +93,19 @@ static const void *KpopAnimation = &KpopAnimation;
     if (animation) {//如果需要消失的动画
         [animation dimissView:self.popView bgView:self.popContentView completed:^{
             [self.popContentView removeFromSuperview];
+            id dissmissed = [self popDismissedCallBackBlock];
+            if (dissmissed) {
+                ((void(^)(void))dissmissed)();
+                [self setPopDismissedCallBackBlock:nil];
+            }
         }];
     }else{//如果不需要消失动画
         [self.popContentView removeFromSuperview];
+        id dissmissed = [self popDismissedCallBackBlock];
+        if (dissmissed) {
+            ((void(^)(void))dissmissed)();
+            [self setPopDismissedCallBackBlock:nil];
+        }
     }
 }
 

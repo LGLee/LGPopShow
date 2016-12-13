@@ -29,7 +29,6 @@
     testBtn.frame = CGRectMake(10, 100, self.view.frame.size.width - 20, 40);
     [testBtn addTarget:self action:@selector(testBtn:) forControlEvents:UIControlEventTouchUpInside];
     
-    
 //    LGPopBgView *bgView = [[LGPopBgView alloc] init];
 //    [self.view addSubview:bgView];
 //    bgView.frame = self.view.bounds;
@@ -53,7 +52,7 @@
     LGPopBgView *bgView = [[LGPopBgView alloc] init];
     bgView.backgroundColor = [UIColor redColor];
     [self showPopView:popView bgView:bgView inView:nil animation:[LGPopDownRise new] dismissed:^{
-        
+        NSLog(@"消失");
     }];
 }
 
