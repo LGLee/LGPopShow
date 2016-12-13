@@ -10,16 +10,21 @@
 
 @implementation LGPopTopDrop
 - (void)showView:(UIView *)popView bgView:(UIView *)bgView{
-    popView.frame = CGRectMake(0.01, 0.01, bgView.frame.size.width, 0.01);
-    [UIView animateWithDuration:0.4 delay:0.4 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        popView.frame = CGRectMake(0.01, 0.01, bgView.frame.size.width, 300);
+    CGRect popFrame = popView.frame;
+    CGRect startF = popView.frame;
+    startF.origin.y = - startF.size.height;
+    popView.frame = startF;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        popView.frame = popFrame;
     } completion:^(BOOL finished) {
     }];
 }
 
 - (void)dimissView:(UIView *)popView bgView:(UIView *)bgView completed:(void (^)(void))completed{
-    [UIView animateWithDuration:0.4 delay:0.4 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        popView.frame = CGRectMake(0.01, 0.01, bgView.frame.size.width, 0);
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        CGRect endF = popView.frame;
+        endF.origin.y = - popView.frame.size.height;
+        popView.frame = endF;
     } completion:^(BOOL finished) {
         completed();
     }];

@@ -8,7 +8,6 @@
 
 #import "UIViewController+LGPopViewController.h"
 #import <objc/runtime.h>
-
 //分类
 @interface UIViewController(LGPopViewControllerPrivate)
 /** 背景 */
@@ -42,7 +41,7 @@ static const void *KpopAnimation = &KpopAnimation;
     }else{
         if (!(bgView.frame.size.height&&bgView.frame.size.width)) {//对bgView的一些判断，默认等于当前容器的bounds
             bgView.frame =popContentView.bounds;
-            }
+        }
     }
     self.popBgView = bgView;//保存传过来的bgView
     [popContentView addSubview:self.popBgView];

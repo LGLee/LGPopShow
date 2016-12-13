@@ -40,18 +40,20 @@
 }
 
 - (void)testBtn:(UIButton *)sender{
+    CGFloat screenW = [UIApplication sharedApplication].keyWindow.frame.size.width;
+    CGFloat screenH = [UIApplication sharedApplication].keyWindow.frame.size.height;
     //我想怎么用
     LGPopView *popView = [[LGPopView alloc] init];
-    popView.frame = CGRectMake(10, 10, 200, 200);
+   // popView.frame = CGRectMake(0.01,screenH - 240, screenW, 240);
+    popView.frame = CGRectMake(0.01, 64, screenW, 240);
     UIButton *hahaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [hahaBtn setTitle:@"haha" forState:UIControlStateNormal];
     hahaBtn.backgroundColor = [UIColor purpleColor];
-    hahaBtn.frame = CGRectMake(10, 10, 30, 10);
+    hahaBtn.frame = CGRectMake(10, 10, 30, 44);
     [popView addSubview:hahaBtn];
     
     LGPopBgView *bgView = [[LGPopBgView alloc] init];
-    bgView.backgroundColor = [UIColor redColor];
-    [self showPopView:popView bgView:bgView inView:nil animation:[LGPopDownRise new] dismissed:^{
+    [self showPopView:popView bgView:bgView inView:self.view animation:[LGPopTopDrop new] dismissed:^{
         NSLog(@"消失");
     }];
 }

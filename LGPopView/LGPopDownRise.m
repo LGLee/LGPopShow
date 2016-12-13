@@ -12,8 +12,11 @@
 
 - (void)showView:(UIView *)popView bgView:(UIView *)bgView{
     CGRect popFrame = popView.frame;
-    popView.frame = CGRectMake(0.01, - CGRectGetMaxY(bgView.frame), bgView.frame.size.width, 0.01);
-    [UIView animateWithDuration:0.4 delay:0.4 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    CGRect startF = popView.frame;
+    startF.origin.y = CGRectGetMaxY(bgView.frame);
+    popView.frame = startF;
+    //popView.frame.or = CGRectMake(0.01, CGRectGetMaxY(bgView.frame), bgView.frame.size.width, 0.01);
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         popView.frame = popFrame;
     } completion:^(BOOL finished) {
         
@@ -21,8 +24,11 @@
 }
 
 - (void)dimissView:(UIView *)popView bgView:(UIView *)bgView completed:(void (^)(void))completed{
-    [UIView animateWithDuration:0.4 delay:0.4 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        popView.frame = CGRectMake(0.01, -CGRectGetMaxY(bgView.frame), bgView.frame.size.width, 0);
+    [UIView animateWithDuration:0.3 delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^{
+        CGRect endF = popView.frame;
+        endF.origin.y = CGRectGetMaxY(bgView.frame);
+        popView.frame = endF;
+        //popView.frame = CGRectMake(0.01, -CGRectGetMaxY(bgView.frame), bgView.frame.size.width, 0);
     } completion:^(BOOL finished) {
         completed();
     }];
