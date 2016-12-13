@@ -18,7 +18,6 @@
 @property (nonatomic, strong) UIView *popContentView;
 /** 消失回调的block */
 @property (nonatomic , copy) void(^popDismissedCallBackBlock)(void);
-
 @end
 
 static const void *KPopBgViewKey =&KPopBgViewKey;
@@ -27,7 +26,7 @@ static const void *KpopContentViewKey = &KpopContentViewKey;
 static const void *KpopDismissedCallBackBlock = &KpopDismissedCallBackBlock;
 static const void *KpopAnimation = &KpopAnimation;
 @implementation UIViewController (LGPopViewController)
-
+#pragma mark - 呈现
 - (void)showPopView:(UIView *)popView bgView:(UIView *)bgView inView:(UIView *)view animation:(id<LGPopAnimation>)animation dismissed:(void (^)(void))dismissed{
     if ([self.popContentView.subviews containsObject:popView]) return;//如果已经弹出,就不要再弹出了
     //判断弹出位置和容器加载
@@ -84,9 +83,17 @@ static const void *KpopAnimation = &KpopAnimation;
     }
 }
 
+#pragma mark - 消失
 - (void)dismissedView:(UIGestureRecognizer *)ges{
     [self dismissPopViewWithAnimation:self.popAnimation  completion:nil];
 }
+- (void)dismissPopView{
+    [self dismissPopViewWithAnimation:self.popAnimation completion:nil];
+}
+- (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation{
+    [self dismissPopViewWithAnimation:animation completion:nil];
+}
+
 
 - (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation completion:(void (^)(void))completion{
     if (animation) {//如果需要消失的动画
@@ -107,7 +114,6 @@ static const void *KpopAnimation = &KpopAnimation;
         }
     }
 }
-
 #pragma mark - runTime实现分类的setting和getting
 - (UIView *)popBgView{
     return objc_getAssociatedObject(self, KPopBgViewKey);
