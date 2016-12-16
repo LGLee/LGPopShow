@@ -34,7 +34,6 @@
 @interface UIViewController (LGPopViewController)
 /** 动画协议 */
 @property (nonatomic ,retain,readonly) id<LGPopAnimation> popAnimation;
-
 /**
  展现你的popView
 

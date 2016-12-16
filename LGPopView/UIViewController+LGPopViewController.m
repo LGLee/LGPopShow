@@ -18,6 +18,15 @@
 @property (nonatomic, strong) UIView *popContentView;
 /** 消失回调的block */
 @property (nonatomic , copy) void(^popDismissedCallBackBlock)(void);
+/** popView栈 -- 实际是popContent栈  用于存储当前弹出的控件 */
+@property (nonatomic ,strong) NSMutableArray *popViewArray;
+/** animation栈 -- 存储动画*/
+@property (nonatomic ,strong) NSMutableArray *animationStack;
+/** popView栈 --  */
+@property (nonatomic ,strong) NSMutableArray *popViewStack;
+/** 回调栈 */
+@property (nonatomic ,strong) NSMutableArray *callBackStack;
+
 @end
 
 static const void *KPopBgViewKey =&KPopBgViewKey;
@@ -25,16 +34,37 @@ static const void *KPopViewKey = &KPopViewKey;
 static const void *KpopContentViewKey = &KpopContentViewKey;
 static const void *KpopDismissedCallBackBlock = &KpopDismissedCallBackBlock;
 static const void *KpopAnimation = &KpopAnimation;
+static const void *KpopViewArray = &KpopViewArray;
+static const void *KanimationStack = &KanimationStack;
+static const void *KpopViewStack = &KpopViewStack;
+static const void *KcallBackStack = &KcallBackStack;
 @implementation UIViewController (LGPopViewController)
 #pragma mark - 呈现
 - (void)showPopView:(UIView *)popView bgView:(UIView *)bgView inView:(UIView *)view animation:(id<LGPopAnimation>)animation dismissed:(void (^)(void))dismissed{
     if ([self.popContentView.subviews containsObject:popView]) return;//如果已经弹出,就不要再弹出了
+    if (self.popViewArray==nil) {
+        self.popViewArray = [NSMutableArray array];
+    }
+    
+    if (self.animationStack == nil) {
+        self.animationStack = [NSMutableArray array];
+    }
+    
+    if (self.popViewStack == nil) {
+        self.popViewStack = [NSMutableArray array];
+    }
+    
+    if (self.callBackStack == nil) {
+        self.callBackStack = [NSMutableArray array];
+    }
+
     //判断弹出位置和容器加载
     UIView *sourceView = [self adjustSourceView:view];
     UIView *popContentView = [[UIView alloc] initWithFrame:sourceView.bounds];
     self.popContentView = popContentView;
     popContentView.backgroundColor = [UIColor clearColor];
     [sourceView addSubview:popContentView];
+    [self.popViewArray addObject:popContentView];
     if (bgView==nil) {//如果bgView没有--创建一个bgview
         bgView = [self defaultBgView];
     }else{
@@ -56,12 +86,19 @@ static const void *KpopAnimation = &KpopAnimation;
         popView.center = popContentView.center;
     }
     self.popView = popView;
+    [self.popViewStack addObject:popView];
     [popContentView addSubview:self.popView];
     self.popAnimation = animation;
+    [self.animationStack addObject:animation];
+    
     if (animation) {//加载动画
         [animation showView:popView bgView:bgView];
     }
     [self setPopDismissedCallBackBlock:dismissed];
+    if (dismissed == nil) {
+        dismissed = ^{NSLog(@"没有处理这个回调哟~(可忽略)");};
+    }
+    [self.callBackStack addObject:dismissed];
 }
 
 //默认背景
@@ -85,34 +122,51 @@ static const void *KpopAnimation = &KpopAnimation;
 
 #pragma mark - 消失
 - (void)dismissedView:(UIGestureRecognizer *)ges{
-    [self dismissPopViewWithAnimation:self.popAnimation  completion:nil];
+   // [self dismissPopViewWithAnimation:self.popAnimation  completion:nil];
+    [self dismissPopView];
 }
 - (void)dismissPopView{
-    [self dismissPopViewWithAnimation:self.popAnimation completion:nil];
+    id<LGPopAnimation> animation = self.animationStack.lastObject;
+    [self dismissPopViewWithAnimation:animation completion:nil];
+    [self.animationStack removeLastObject];
 }
+
 - (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation{
     [self dismissPopViewWithAnimation:animation completion:nil];
 }
 
-
 - (void)dismissPopViewWithAnimation:(id<LGPopAnimation>)animation completion:(void (^)(void))completion{
+     self.popView = self.popViewStack.lastObject;
     if (animation) {//如果需要消失的动画
         [animation dimissView:self.popView bgView:self.popContentView completed:^{
-            [self.popContentView removeFromSuperview];
-            id dissmissed = [self popDismissedCallBackBlock];
+            UIView *lastView = self.popViewArray.lastObject;
+            [lastView removeFromSuperview];
+            [self.popViewArray removeLastObject];
+            self.popContentView = self.popViewArray.lastObject;
+        //[self.popContentView removeFromSuperview];
+            id dissmissed = [self.callBackStack lastObject];
+           // id dissmissed = [self popDismissedCallBackBlock];
             if (dissmissed) {
                 ((void(^)(void))dissmissed)();
-                [self setPopDismissedCallBackBlock:nil];
+                [self.callBackStack removeLastObject];
+                //[self setPopDismissedCallBackBlock:nil];
             }
         }];
     }else{//如果不需要消失动画
-        [self.popContentView removeFromSuperview];
-        id dissmissed = [self popDismissedCallBackBlock];
+        UIView *lastView = self.popViewArray.lastObject;
+        [lastView removeFromSuperview];
+        [self.popViewArray removeLastObject];
+        self.popContentView = self.popViewArray.lastObject;
+       // [self.popContentView removeFromSuperview];
+        //id dissmissed = [self popDismissedCallBackBlock];
+        id dissmissed = [self.callBackStack lastObject];
         if (dissmissed) {
             ((void(^)(void))dissmissed)();
-            [self setPopDismissedCallBackBlock:nil];
+           // [self setPopDismissedCallBackBlock:nil];
+            [self.callBackStack removeLastObject];
         }
     }
+    [self.popViewStack removeLastObject];
 }
 #pragma mark - runTime实现分类的setting和getting
 - (UIView *)popBgView{
@@ -151,4 +205,33 @@ static const void *KpopAnimation = &KpopAnimation;
     return objc_getAssociatedObject(self, KpopAnimation);
 }
 
+- (void)setPopViewArray:(NSMutableArray *)popViewArray{
+    objc_setAssociatedObject(self, KpopViewArray, popViewArray, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (NSMutableArray *)popViewArray{
+    return objc_getAssociatedObject(self, KpopViewArray);
+}
+
+- (void)setAnimationStack:(NSMutableArray *)animationStack{
+    objc_setAssociatedObject(self, KanimationStack, animationStack, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSMutableArray *)animationStack{
+    return objc_getAssociatedObject(self, KanimationStack);
+}
+
+- (void)setPopViewStack:(NSMutableArray *)popViewStack{
+    objc_setAssociatedObject(self, KpopViewStack, popViewStack, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSMutableArray *)popViewStack{
+    return objc_getAssociatedObject(self, KpopViewStack);
+}
+
+- (void)setCallBackStack:(NSMutableArray *)callBackStack{
+    objc_setAssociatedObject(self, KcallBackStack, callBackStack, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+- (NSMutableArray *)callBackStack{
+    return objc_getAssociatedObject(self, KcallBackStack);
+}
 @end
